@@ -6,6 +6,7 @@ import NowPlayingItem from '../../components/film/NowPlayingItem'
 
 class NowPlayingView extends React.Component {
   render(){
+
     const {films} = this.props
     return (
       <div className="film-list">

@@ -12,23 +12,19 @@ import * as types from '../constants/ActionTypes'
  * @param  {String} options.query query参数
  * @return {Promise}               Promise
  */
-const _get = ({ url, query },dispatch) => {
-  dispatch({type:types.START_LOADING})
-  let _url
-  if (query) {
-    _url = `http://m.maizuo.com/v4/api${url}?${query}`
-  } else {
-    _url = `http://m.maizuo.com/v4/api${url}`
-  }
+const _get = ({url, query}, dispatch) => {
+  dispatch({type: types.START_LOADING})
+  let _url = query ? `http://m.maizuo.com/v4/api${url}` : `http://m.maizuo.com/v4/api${url}?${query}`
   return fetch(_url)
     .then(res => {
-      dispatch({type:types.FINISH_LOADING})
+      dispatch({type: types.FINISH_LOADING})
       if (res.status >= 200 && res.status < 300) {
-        return res.json()
+        return res.json();
       }
-      return Promise.reject(new Error(res.status));
+      return Promise.reject(new Error(res.status))
     })
 }
+
 /**
  * 获取正在热映电影列表
  * @param  {Function} options.dispatch store对象解构出来的函数，无需手动提供
@@ -36,20 +32,25 @@ const _get = ({ url, query },dispatch) => {
  * @param  {Number} count             每页数量
  * @return {Promise}                  Promise
  */
-export const fetchNowPlayingLists = (page,count) => {
+export const fetchNowPlayingLists = (page, count) => {
   const url = '/film/now-playing';
-  const query = `count=${count}&page=${page}&_t=`+new Date().getTime()
-  return (dispatch) =>{
-    _get({ url, query},dispatch)
-      .then((json) => {
-        if (json.status===0) {
-          return dispatch({type:types.FETCH_NOW_PLAYING_SUCCESS, nowPlayingFilms:json.data.films})
+  const query = `count=${count}&page=${page}&_t=` + new Date().getTime();
+  return dispatch => {
+    _get({url, query}, dispatch)
+      .then( res => {
+        if(res.status === 0){
+          return dispatch({
+            type: types.FETCH_NOW_PLAYING_SUCCESS,
+            nowPlayingFilms: res.data.films,  //nowPlayingFilms
+          });
         }
-        return Promise.reject(new Error('fetchFilmsLists failure'))
+        return Promise.reject(new Error('fetchNowPlayingList failure'));
       })
-      .catch((error) => {
-        dispatch({type:types.FETCH_COMING_SOON_FAIL})
-        return Promise.reject(error)
+      .catch((err) => {
+        dispatch({
+          type: types.FETCH_NOW_PLAYING_FAIL
+        });
+        return Promise.reject(err)
       })
   }
 }
@@ -122,13 +123,22 @@ export const fetchFilmDetail = (id) => {
       });
   }
 }
+
+
 /**
  * 切换TAB显示状态
  */
-export const changeTab = (type) =>{
-  return dispatch=>dispatch({type:types.CUR_TAB,curTab:type})
+export const changeTab = (type) => {
+  return dispatch => dispatch({
+    type: types.CUR_TAB,
+    curTab: type,
+  })
 }
 
-export const changeLeftNavState = (isShow) =>{
-  return dispatch => dispatch({type:types.CHANGE_LEFTNAV_STATE,showLeftNav:isShow})
+// 顶部下拉菜单
+export const changeLeftNavState = (isShow) => {
+  return dispatch => dispatch({
+    type: types.CHANGE_LEFTNAV_STATE,
+    showLeftNav: isShow
+  })
 }

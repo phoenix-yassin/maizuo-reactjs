@@ -1,9 +1,10 @@
 import { createStore, combineReducers,applyMiddleware } from 'redux'
 import thunkMiddleware from 'redux-thunk'
-// import createLogger from 'redux-logger'
+import createLogger from 'redux-logger'
 import rootReducer from '../reducers'
 import { routerReducer } from 'react-router-redux'
 
+// 这里并没有给 initalState 赋值， 你想多啦
 
 module.exports = function(initialState) {
   const store = createStore(
@@ -12,7 +13,7 @@ module.exports = function(initialState) {
       routing: routerReducer
     }),
     initialState,
-    applyMiddleware(thunkMiddleware),
+    applyMiddleware(thunkMiddleware, createLogger()),
   )
 
   if (module.hot) {
@@ -22,6 +23,5 @@ module.exports = function(initialState) {
       store.replaceReducer(nextReducer)
     })
   }
-
   return store
 }

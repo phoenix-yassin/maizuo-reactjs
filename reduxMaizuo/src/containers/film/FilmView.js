@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import NowPlayingView from './NowPlayingView'
 import ComingSoonView from './ComingSoonView'
-import { changeTab,fetchComingSoonLists,fetchNowPlayingLists } from '../../actions'
+import { changeTab,fetchComingSoonLists,fetchNowPlayingLists, fetchMoreNowPlayingLists} from '../../actions'
 import './FilmView.less'
 
 class FilmView extends React.Component {
@@ -11,8 +11,9 @@ class FilmView extends React.Component {
     dispatch(fetchNowPlayingLists(1,10))
     dispatch(fetchComingSoonLists(1,10))
   }
+
   render() {
-    const {dispatch,curTab,nowPlayingFilms,comingSoonFilms} = this.props
+    const {dispatch, curTab, nowPlayingFilms, comingSoonFilms} = this.props
     let nowPlayingStyle='now-playing'
     let comingSoonStyle='coming-soon'
     if(curTab==='NOW_PLAYING'){
@@ -31,7 +32,8 @@ class FilmView extends React.Component {
               <div className={comingSoonStyle}>即将上映</div>
             </a>
           </div>
-          {this.props.curTab==='NOW_PLAYING'?<NowPlayingView films={nowPlayingFilms}/>:<ComingSoonView films={comingSoonFilms}/>}
+          {this.props.curTab==='NOW_PLAYING'?<NowPlayingView films={nowPlayingFilms.films} />:<ComingSoonView films={comingSoonFilms}/>}
+	        {this.props.curTab==='NOW_PLAYING'?<div><button className="center" onClick={()=>dispatch(fetchMoreNowPlayingLists(2,4))}>More...</button></div>:null}
         </div>
       </section>
     )
@@ -40,7 +42,7 @@ class FilmView extends React.Component {
 }
 const mapStateToProps = (state) =>{
   const curTab = state.app.curTab||'NOW_PLAYING'
-  const nowPlayingFilms = state.film.nowPlayingFilms||[]
+  const nowPlayingFilms = state.film.nowPlayingFilms||{}
   const comingSoonFilms = state.film.comingSoonFilms||[]
   return {
     curTab,

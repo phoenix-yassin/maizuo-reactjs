@@ -8,7 +8,13 @@ const film=(state={},action) => {
     case types.FETCH_COMING_SOON_SUCCESS:
       return Object.assign({}, state, {comingSoonFilms:action.comingSoonFilms})
     case types.FETCH_NOW_PLAYING_SUCCESS:
-      return Object.assign({}, state, {nowPlayingFilms:action.nowPlayingFilms})
+      return Object.assign({}, state, {nowPlayingFilms: {
+      	films: action.nowPlayingFilms.films,
+	      page: action.nowPlayingFilms.page,
+        }
+      })
+	  case types.FETCH_COMING_SOON_SUCCESS:
+	  	return Object.assign({}, state, {nowPlayingFilms: [...state.comingSoonFilms, ...action.nowPlayingFilms]})
     case types.FETCH_BILLBOARD_SUCCESS:
       return Object.assign({}, state, {billboards:action.billboards})
     case types.FETCH_DETAIL_SUCCESS:

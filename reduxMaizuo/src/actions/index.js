@@ -14,8 +14,8 @@ import * as types from '../constants/ActionTypes'
  */
 const _get = ({url, query}, dispatch) => {
   dispatch({type: types.START_LOADING})
-  let _url = query ? `http://m.maizuo.com/v4/api${url}` : `http://m.maizuo.com/v4/api${url}?${query}`
-  return fetch(_url)
+  let _url = query ? `http://m.maizuo.com/v4/api${url}?${query}` : `http://m.maizuo.com/v4/api${url}`
+	return fetch(_url)
     .then(res => {
       dispatch({type: types.FINISH_LOADING})
       if (res.status >= 200 && res.status < 300) {
@@ -41,7 +41,15 @@ export const fetchNowPlayingLists = (page, count) => {
         if(res.status === 0){
           return dispatch({
             type: types.FETCH_NOW_PLAYING_SUCCESS,
-            nowPlayingFilms: res.data.films,  //nowPlayingFilms
+            nowPlayingFilms: {
+            	films: res.data.films,
+	            page:{
+            		page: page,
+		            count: count,
+            		total: res.data.page.total,
+		            current: res.data.page.current,
+	            }
+            },  //nowPlayingFilms
           });
         }
         return Promise.reject(new Error('fetchNowPlayingList failure'));
@@ -77,6 +85,24 @@ export const fetchComingSoonLists = (page,count) => {
         return Promise.reject(error)
       })
   }
+}
+
+export const fetchMoreNowPlayingLists = (page, count) => {
+	const url = '/film/coming-soon'
+	const query = `count=${count}&page=${page}&_t=`+new Date().getTime()
+	return (dispatch) => {
+		_get({url, query}, dispatch)
+			.then((json) => {
+				if (json.status===0) {
+					return dispatch({type:types.FETCH_MORE_NOW_PLAYING_FAIL, comingSoonFilms:json.data.films})
+				}
+				return Promise.reject(new Error('fetchMoreFilmsLists failure'))
+			})
+			.catch((error) => {
+				dispatch({type:types.FETCH_MORE_COMING_SOON_FAIL})
+				return Promise.reject(error)
+			})
+	}
 }
 /**
  * 获取广告

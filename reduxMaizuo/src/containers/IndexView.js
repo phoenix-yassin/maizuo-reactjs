@@ -4,7 +4,8 @@
  *          This modifications only run once when the generator is invoked - if
  *          you edit them, they are not updated again.
  */
-import React,{ Component,PropTypes} from 'react';
+import React,{ Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
 import {fetchComingSoonLists,fetchBillboards,fetchNowPlayingLists} from '../actions'
 import 'styles/App.less';
@@ -48,12 +49,11 @@ IndexView.propTypes={
 const mapStateToProps = (state) => {
   const comingSoonFilms = state.film.comingSoonFilms||[]
   const billboards = state.film.billboards||[]
-  const nowPlayingFilms = state.film.nowPlayingFilms||[]
+  const nowPlayingFilms = state.film.nowPlayingFilms && state.film.nowPlayingFilms.films||[]
   return {
     comingSoonFilms,
     nowPlayingFilms,
     billboards,
-
   }
 }
 export default connect(mapStateToProps)(IndexView)

@@ -8,7 +8,7 @@ import MoreButton from './MoreButton'
 
 class NowPlayingFilms extends React.Component {
   render() {
-    const { films } = this.props
+    const {films} = this.props || []
     return (
       <ul>
         {films.map((film,i)=>

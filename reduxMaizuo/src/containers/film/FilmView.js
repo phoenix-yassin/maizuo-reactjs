@@ -9,7 +9,7 @@ class FilmView extends React.Component {
 
   componentDidMount(){
     const { dispatch, nowPlayingFilms } = this.props
-	  let {current} = nowPlayingFilms.page
+	  const {current} = nowPlayingFilms.page
 	  if(current === 1){
       dispatch(fetchNowPlayingLists(1,8))
 	  }
@@ -24,7 +24,7 @@ class FilmView extends React.Component {
 
   render() {
     const {dispatch, curTab, nowPlayingFilms, comingSoonFilms, nowPlayingFilmsPage} = this.props
-	  let current = (nowPlayingFilmsPage && nowPlayingFilmsPage.current) || 1;
+	  const current = (nowPlayingFilmsPage && nowPlayingFilmsPage.current) || 1;
     let nowPlayingStyle='now-playing'
     let comingSoonStyle='coming-soon'
     if(curTab==='NOW_PLAYING'){
@@ -54,7 +54,7 @@ const mapStateToProps = (state) =>{
   const curTab = state.app.curTab||'NOW_PLAYING'
   const nowPlayingFilms = state.film.nowPlayingFilms||{}
   const comingSoonFilms = state.film.comingSoonFilms||[]
-	const nowPlayingFilmsPage = state.film.page || {}
+	const nowPlayingFilmsPage = nowPlayingFilms.page || {}
   return {
     curTab,
     comingSoonFilms,

@@ -89,7 +89,6 @@ export const fetchMoreNowPlayingLists = (page, count) => {
 		_get({url, query}, dispatch)
 			.then((json) => {
 				if (json.status===0) {
-					debugger;
 					return dispatch({type:types.FETCH_MORE_NOW_PLAYING_SUCCESS, nowPlayingFilms:{
 						films: json.data.films,
 						page: json.data.page

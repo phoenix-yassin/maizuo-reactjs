@@ -16,6 +16,10 @@ const film=(state={},action) => {
 	  case types.FETCH_MORE_NOW_PLAYING_SUCCESS:
 	  	const films = [...state.nowPlayingFilms.films, ...action.nowPlayingFilms.films]
 		  const page = action.nowPlayingFilms.page
+		  if( state.nowPlayingFilms.page.current === state.nowPlayingFilms.page.count
+			  && state.nowPlayingFilms.page.count === page.count ){
+	  		return state;
+		  }
 	  	return Object.assign({}, state, {nowPlayingFilms: {
 	  		films: films,
 		    page: page,
